@@ -88,6 +88,15 @@ var ms = metalsmith(dir.base)
         layout: 'article.html'
       }
     },
+    about: {
+      pattern: 'about/**/*',
+      sortBy: 'priority',
+      reverse: true,
+      refer: true,
+      metadata: {
+        layout: 'article.html'
+      }
+    },
     article: {
       pattern: 'article/**/*',
       sortBy: 'date',
