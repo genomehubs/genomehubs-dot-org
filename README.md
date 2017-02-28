@@ -1,6 +1,6 @@
 # genomehubs-dot-org 
 
-The [GenomeHubs](http://genomehubs.org), created using the Node.js Metalsmith static site generator.
+The [GenomeHubs](http://genomehubs.org) website, created using the Node.js Metalsmith static site generator.
 
 ## Installation
 
@@ -28,6 +28,7 @@ docker stop genomehubs-dot-org-dev && docker rm genomehubs-dot-org-dev
 To host the production version:
 
 ```
-mv genomehubs/genomehubs-dot-org/build genomehubs/site
+cd ~/genomehubs/genomehubs-dot-org
+rsync -av --delete build/ ../site
 docker run -d -v ~/genomehubs/site:/var/www:ro -p 8080:8080 --name genomehubs-dot-org genomehubs/lighttpd:latest
 ```
