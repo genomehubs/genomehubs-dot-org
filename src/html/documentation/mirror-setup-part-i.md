@@ -21,9 +21,9 @@ create a mySQL data directory, an Ensembl configuration directory and an additio
 directory for log files, which can be useful for debugging:
 
 ```
-ubuntu@hostname:~$ mkdir -p example/mysql/data
-ubuntu@hostname:~$ mkdir -p example/ensembl/conf
-ubuntu@hostname:~$ mkdir -p example/ensembl/logs
+ubuntu@hostname:~$ mkdir -p ~/example/mysql/data
+ubuntu@hostname:~$ mkdir -p ~/example/ensembl/conf
+ubuntu@hostname:~$ mkdir -p ~/example/ensembl/logs
 ```
 
 ## Edit configuration files
@@ -36,8 +36,8 @@ Ensembl mirror site. Example files are available in the `basic-mirror` folder of
 versions are shown below.
 
 ```
-ubuntu@hostname:~$ wget -O example/ensembl/conf/database.ini https://raw.githubusercontent.com/genomehubs/demo/master/basic-mirror/database.ini
-ubuntu@hostname:~$ wget -O example/ensembl/conf/setup.ini https://raw.githubusercontent.com/genomehubs/demo/master/basic-mirror/setup.ini
+ubuntu@hostname:~$ wget -O ~/example/ensembl/conf/database.ini https://raw.githubusercontent.com/genomehubs/demo/master/basic-mirror/database.ini
+ubuntu@hostname:~$ wget -O ~/example/ensembl/conf/setup.ini    https://raw.githubusercontent.com/genomehubs/demo/master/basic-mirror/setup.ini
 ```
 
 ## Docker containers
@@ -100,7 +100,7 @@ a useful source of information for debugging. If the Mirror site has started up 
 then after a few minutes the content of the `logs` directory will look something like this:
 
 ```
-ubuntu@hostname:~$ ls -thor example/ensembl/logs/
+ubuntu@hostname:~$ ls -thor ~/example/ensembl/logs/
 total 56K
 -rw-r--r-- 1 ubuntu  15K Feb 22 12:15 database.log
 -rw-r--r-- 1 ubuntu 4.7K Feb 22 12:16 update.log
@@ -111,11 +111,14 @@ total 56K
 -rw-r--r-- 1 ubuntu  293 Feb 22 12:17 e4144a267430.access_log
 ```
 
-with the `error_log` or `access_log` the most recently modified file in the logs directory and `reload.log` no longer updating.
+with the `error_log` or `access_log` the most recently modified file in the logs directory and
+`reload.log` no longer updating.
 
 ## Visit site
 
-The Ensembl mirror should be available at http://127.0.0.1:8090
+The Ensembl mirror should be available at `http://127.0.0.1:8090`. If you only have command
+line access, you can also use `wget http://127.0.0.1:8090` and see if the downloaded `index.html`
+contains a link to `Rhodnius_prolixus` which is the example species in `setup.ini`.
 
 ## Troubleshooting
 
@@ -150,9 +153,9 @@ matter of waiting for the download to complete (use `tail -f example/ensembl/log
 to check on progress). If the problem persists, check you are able to access the Ensembl ftp
 servers from the Docker host and from containers on the Docker host.
 
-#### http://127.0.0.1:8090 has no content
+#### `http://127.0.0.1:8090` has no content
 
-Once the log files are no longer being updated, if no content is visible at http://127.0.0.1:8090,
+Once the log files are no longer being updated, if no content is visible at `http://127.0.0.1:8090`,
 check the log files. If `update.log` is unable to connect one or more databases, check the database
 connection settings. Other errors are likely to be found in `reload.log`.  Occasionally starting up
 the Ensembl webcode will require more than 5 attempts so it can be worthwile to try simply removing
