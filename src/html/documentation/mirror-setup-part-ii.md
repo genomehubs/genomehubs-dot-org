@@ -235,7 +235,7 @@ From the machine which has a web browser, `ssh dockerserver` and log in to your 
 The ssh command will create tunnels to 127.0.0.1 on the remote server. Test the Ensembl installation
 by visiting `http://127.0.0.1:8081` in the browser.
 
-For a production installation, you will want to redirect domain names such as `ensembl.genome.org`,`download.genome.org` and
+For a production installation, you will want to redirect domain names such as `ensembl.genome.org`, `download.genome.org` and
 `blast.genome.org` to the ports where the services are running. The instructions for doing this are beyond the scope of this
 tutorial.
 
