@@ -12,12 +12,17 @@ species, including a [SequenceServer](http://sequenceserver.com) BLAST server, a
 If you haven't already done so, try out the [basic mirror tutorial](http://genomehubs.org/documentation/mirror-setup-part-i/)
 to get started on a simpler version.
 
-## Clone this tutorial
+## Clone the demo example
 
 ```
 ubuntu@hostname:~$ git clone https://github.com/genomehubs/demo.git
-ubuntu@hostname:~$ cd demo/genomehubs-mirror
+ubuntu@hostname:~$ cd ~/demo/genomehubs-mirror
+```
+If you want to see what the directory structure to see how the files driving the downloads and blast servers are 
+stored, you can use a linux utility like `tree`:
+```
 ubuntu@hostname:~$ tree
+
 .
 ├── blast
 │   ├── conf
