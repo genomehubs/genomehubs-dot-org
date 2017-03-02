@@ -18,11 +18,10 @@ to get started on a simpler version.
 ubuntu@hostname:~$ git clone https://github.com/genomehubs/demo.git
 ubuntu@hostname:~$ cd ~/demo/genomehubs-mirror
 ```
-If you want to see what the directory structure to see how the files driving the downloads and blast servers are 
+If you want to examine the directory structure to see how the files driving the downloads and blast servers are 
 stored, you can use a linux utility like `tree`:
 ```
 ubuntu@hostname:~$ tree
-
 .
 ├── blast
 │   ├── conf
@@ -122,7 +121,8 @@ settings, passwords, etc. is loaded last.  A third file is required `<database n
 will be loaded in between the two provided files. `<database name>.ini` contains parameters specific
 to the current assembly (particularly metadata) if the database already exists (as is the case in this
 example) a `<database name>.ini` file can be generated automatically using the `DATABASE` environment
-variable and connection settings specified in the other `.ini` files.
+variable and connection settings specified in the other `.ini` files. We use Perl and .ini files
+extensively to maintain consistency with the Ensembl codebase's Perl API and .ini configuration settings.
 
 `FLAGS` are used to control which EasyImport scripts are run, in this example `-e` runs the
 `export_sequences.pl` script to generate sequence files for downloading and BLAST, `-j` runs the
@@ -141,11 +141,11 @@ docker run -d \
            -v ~/demo/genomehubs-mirror/blast/data:/import/blast \
            -e DATABASE=melitaea_cinxia_core_32_85_1 \
            -e FLAGS="-e -j -i" \
-           easy-import
+           genomehubs/easy-import:latest
 ```
 
-Since these scripts extract and process all entries in the Ensembl database, they will take
-a few minutes to run. progress can be monitored by checking `docker logs easy-import-melitaea_cinxia_core_32_85_1`
+Since these scripts extract and process all entries in the Ensembl database, they will take several minutes
+to run. progress can be monitored by checking `docker logs easy-import-melitaea_cinxia_core_32_85_1`
 or using `top`/`htop`
 
 Once all scripts have finished, remove the container using
@@ -156,7 +156,8 @@ docker stop easy-import-melitaea_cinxia_core_32_85_1 && docker rm easy-import-me
 
 ### h5ai (downloads) container
 
-Once the files have been generated using EasyImport, they are ready to be viewed on the h5ai
+Once the sequence files have been generated from Ensembl MySQL Databases using EasyImport, they are placed
+in `~/demo/genomehubs-mirror/download/data`, and are ready to be viewed on the h5ai
 downloads server. The `~/demo/genomehubs-mirror/download/data` directory can be mounted anywhere
 under `/var/www` but not directly to `/var/www`.
 
@@ -174,8 +175,9 @@ contains some browsable directories/files.
 
 ### SequenceServer (BLAST) container
 
-The SequenceServer BLAST container can be started in a similar way. Several configuration
-options are available by placing files in `demo/genomehubs-mirror/blast/conf`. Of particular
+The SequenceServer BLAST container can be started in a similar way. EasyImport places fasta files
+needed by SequenceServer in `~/demo/genomehubs-mirror/blast/data`. Other options are available
+by placing files in `demo/genomehubs-mirror/blast/conf`. Of particular
 note is the `links.rb` file, which specifies how to parse the sequence IDs to generate links
 back to the ensembl site, and the base url for that site.
 
@@ -213,4 +215,28 @@ docker run -d \
 
 ## Visit site
 
-The Ensembl mirror should be available at http://127.0.0.1:8081
+The Ensembl mirror should be available at `http://127.0.0.1:8081`. If you are running docker on a server without a web
+browser, then you could try the following to test the Ensembl installation.
+
+Create an ssh tunnel from a machine that has a web browser to the server running docker: eg:
+```
+# Add this to your .ssh/config file.
+# If you are not comfortable editing a .ssh/config file, this may not be a good method for you:
+# (replace the HostName and User with values relevant to you)
+
+Host dockerserver
+ HostName dockerserver.ac.uk
+ LocalForward 8081 127.0.0.1:8081
+ LocalForward 8082 127.0.0.1:8082
+ LocalForward 8083 127.0.0.1:8083
+ User username
+```
+From the machine which has a web browser, `ssh dockerserver` and log in to your docker server.
+The ssh command will create tunnels to 127.0.0.1 on the remote server. Test the Ensembl installation
+by visiting `http://127.0.0.1:8081` in the browser.
+
+For a production installation, you will want to redirect domain names such as `ensembl.genome.org`,`download.genome.org` and
+`blast.genome.org` to the ports where the services are running. The instructions for doing this are beyond the scope of this
+tutorial.
+
+
