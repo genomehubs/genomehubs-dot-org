@@ -34,7 +34,7 @@ var
   sitemap = require('metalsmith-mapsite'),
   rssfeed = require('metalsmith-feed'),
   assets = require('metalsmith-assets'),
-  googleAnalytics = require('metalsmith-google-analytics'),
+//  googleAnalytics = require('metalsmith-google-analytics'),
   htmlmin = devBuild ? null : require('metalsmith-html-minifier'),
   browsersync = devBuild ? require('metalsmith-browser-sync') : null,
 
@@ -149,7 +149,7 @@ ms
     source: dir.source + 'assets/',
     destination: './'
   }))
-  .use(googleAnalytics('UA-93009659-1'))
+//  .use(googleAnalytics('UA-93009659-1'))
   .build(function(err) { // build
     if (err) throw err;
   });
