@@ -136,3 +136,110 @@ Files in a directory mounted to `/conf` will be used as follows:
 - ``custom.css`` can be applied to the Masthead or any other page element
 - ``links.rb`` specifies how to parse the sequence IDs to generate links back to the Ensembl 
   site, and the base url for that site.
+
+
+## RepeatMasker
+
+[View on Github](https://github.com/genomehubs/repeatmasker-docker)
+
+Repeatmasker docker container built from [hub.docker.com/r/robsyme/repeatmasker-onbuild](https://hub.docker.com/r/robsyme/repeatmasker-onbuild/)
+with modifications to make it easier to use as a GenomeHubs container by running as UID 1000, separating input and output 
+directories and renaming output files.
+
+Clone the repository
+
+```
+git clone https://github.com/genomehubs/repeatmasker-docker.git
+cd repeatmasker-docker
+```
+
+Fetch a copy of the RepBase libraries
+
+```
+wget --user your_username \
+    --password 12345 \
+    -O repeatmaskerlibraries.tar.gz \
+    http://www.girinst.org/server/RepBase/protected/repeatmaskerlibraries/repeatmaskerlibraries-20160829.tar.gz
+
+```
+
+Build the docker image
+
+```
+docker build -t repeatmasker .
+```
+
+Run repeatmasker
+
+```
+mkdir repeats
+docker run -d \
+           --name repeatmasker \
+           -v `pwd`/sequence:/in \
+           -v `pwd`/repeats:/out \
+           -e ASSEMBLY=scaffolds.fa.gz \
+           -e NSLOTS=16 \
+           -e SPECIES=arthropoda \
+           repeatmasker
+```
+
+## CEGMA
+
+[View on Github](https://github.com/genomehubs/cegma-docker)
+
+CEGMA docker container built from [hub.docker.com/r/robsyme/cegma-docker](https://hub.docker.com/r/robsyme/cegma-docker/)
+with modifications to make it easier to use as a GenomeHubs container by running as UID 1000, separating input and output 
+directories and renaming output files.
+
+```
+docker run -d \
+           --name cegma-test \
+           -v `pwd`/sequence:/in \
+           -v `pwd`/cegma:/out \
+           -e ASSEMBLY=scaffolds.fa.gz \
+           genomehubs/cegma:latest
+```
+
+Writes `scaffolds.fa.completeness_report.txt` and `scaffolds.fa.cegma.gff` to the directoy mounted at `/out`.
+
+## BUSCO
+
+[View on Github](https://github.com/genomehubs/busco-docker)
+
+BUSCO docker container built from [hub.docker.com/r/vera/busco](https://hub.docker.com/r/vera/busco/)
+with modifications to make it easier to use as a GenomeHubs container by running as UID 1000, separating input and output 
+directories and renaming output files.
+
+Clone the repository
+
+```
+git clone https://github.com/genomehubs/busco-docker.git
+cd busco-docker
+```
+
+Fetch BUSCO lineages
+
+```
+wget http://busco.ezlab.org/v2/datasets/insecta_odb9.tar.gz
+...
+```
+
+Build the docker image
+
+```
+docker build -t busco .
+```
+
+Run BUSCO
+
+```
+mkdir busco
+docker run -d \
+           --name busco-test \
+           -v `pwd`/sequence:/in \
+           -v `pwd`/busco:/out \
+           -e INFILE=Test.fa.gz \
+           busco -l insecta_odb9 -m genome -c 8 -sp fly
+```
+
+
