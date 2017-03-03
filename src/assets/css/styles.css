@@ -278,6 +278,7 @@ li img {
 
 	.subpages .nav.sub {
 		flex: 1 1 30%;
+		max-width: 30%;
 		margin: 1em 0 1em 2rem;
 		float: right;
 	}

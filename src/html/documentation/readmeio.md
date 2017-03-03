@@ -1,5 +1,5 @@
 ---
-title: readme.io
+title: Import Documentation
 description: Detailed documentation of our Ensembl mirroring and import pipelines 
 priority: 0.5
 ---
