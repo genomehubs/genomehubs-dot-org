@@ -303,3 +303,27 @@ Takes `species_proteins.fa` in the directory mounted at `/in` and writes output 
 directory mounted at `/dir` (both are the current working directory in this case). Any interproscan arguments can be used. In 
 this example, `-appl` specifies which interproscan analyses to run, `-goterms` will output GO terms, `-dp` will disable 
 precalculated lookups, `-pa` looks up corresponding pathway annotations, `-f TSV` outputs results in TSV format.
+
+If you want to run this with many threads in parallel, first download a copy of `interproscan.properties`:
+
+```
+wget https://raw.githubusercontent.com/blaxterlab/interproscan-docker/master/interproscan.properties
+```
+
+Edit `interproscan.properties` and change these values to match your number of threads (eg: 16):
+```
+number.of.embedded.workers=1
+maxnumber.of.embedded.workers=16
+```
+
+Now run the docker container with this file mounted to the right place inside the container:
+
+```
+docker run --rm --name ipr-test \
+    -u $UID:$GROUPS \
+    -v `pwd`:/dir \
+    -v `pwd`:/in \
+    -v `pwd`/interproscan.properties:/interproscan-5.22-61.0/interproscan.properties \
+    blaxterlab/interproscan:latest \
+    interproscan.sh -i /in/species_proteins.fa -d /dir -appl PFAM,SignalP_EUK -goterms -dp -pa -f TSV
+```
