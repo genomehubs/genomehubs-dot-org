@@ -242,4 +242,43 @@ docker run -d \
            busco -l insecta_odb9 -m genome -c 8 -sp fly
 ```
 
+## BLASTP against UniProt
 
+[View on Github](https://github.com/blaxterlab/ncbi-blast-docker)
+
+Download and gunzip the latest UniProt Swiss-Prot protein fasta file:
+
+```
+wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
+gunzip uniprot_sprot.fasta.gz
+```
+
+Use the NCBI-Blast docker container to format the downloaded file as a protein BLASTDB. This will create a UniProt Swiss-Prot 
+protein blast database in the current directory (change `pwd` to directories of your choice)
+
+```
+docker run --rm --name blast-test \
+    --user $UID:$GROUPS \
+    --volume `pwd`:/in \
+    --volume `pwd`:/out \
+    blaxterlab/ncbi-blast:latest \
+    makeblastdb -dbtype prot -in /in/uniprot_sprot.fasta -out /out/uniprot_sprot.fasta
+```
+
+Run BLASTP of protein fasta file against the blast database:
+
+```
+docker run --rm --name blast-test \
+    --user $UID:$GROUPS \
+    --volume `pwd`:/query \
+    --volume `pwd`:/out \
+    --volume `pwd`:/db \
+    blaxterlab/ncbi-blast:latest \
+    blastp -query /query/species_proteins.fa -db /db/uniprot_sprot.fasta -evalue 1e-10 -num_threads 16 \
+        -outfmt '6 std qlen slen stitle btop' -out /out/species_proteins.fa.blastp.uniprot_sprot.1e-10
+```
+
+Takes `species_proteins.fa` in the directory mounted at `/query` and writes species_proteins.fa.blastp.uniprot_sprot.1e-10.gz 
+(automatically gzipped) to the directory mounted at /out (both are the current working directory in this case). Uses GNU 
+Parallel underneath to speed up the blast jobs by running `-num_threads 16` parallel threads. (O. Tange (2011): GNU Parallel 
+- The Command-Line Power Tool ;login: The USENIX Magazine, February 2011:42-47.)
