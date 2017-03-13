@@ -279,6 +279,27 @@ docker run --rm --name blast-test \
 ```
 
 Takes `species_proteins.fa` in the directory mounted at `/query` and writes species_proteins.fa.blastp.uniprot_sprot.1e-10.gz 
-(automatically gzipped) to the directory mounted at /out (both are the current working directory in this case). Uses GNU 
+(automatically gzipped) to the directory mounted at `/out` (both are the current working directory in this case). Uses GNU 
 Parallel underneath to speed up the blast jobs by running `-num_threads 16` parallel threads. (O. Tange (2011): GNU Parallel 
 - The Command-Line Power Tool ;login: The USENIX Magazine, February 2011:42-47.)
+
+## Interproscan
+
+[View on Github](https://github.com/blaxterlab/interproscan-docker)
+
+Run Interproscan on a protein fasta file using a docker container (Note: the protein fasta sequences must not have "*"s else it 
+will fail):
+
+```
+docker run --rm --name ipr-test \
+    -u $UID:$GROUPS \
+    -v `pwd`:/dir \
+    -v `pwd`:/in \
+    blaxterlab/interproscan:latest \
+    interproscan.sh -i /in/species_proteins.fa -d /dir -appl PFAM,SignalP_EUK -goterms -dp -pa -f TSV
+```
+
+Takes `species_proteins.fa` in the directory mounted at `/in` and writes output file `species_proteins.fa.tsv` to the 
+directory mounted at `/dir` (both are the current working directory in this case). Any interproscan arguments can be used. In 
+this example, `-appl` specifies which interproscan analyses to run, `-goterms` will output GO terms, `-dp` will disable 
+precalculated lookups, `-pa` looks up corresponding pathway annotations, `-f TSV` outputs results in TSV format.
