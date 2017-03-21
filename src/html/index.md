@@ -16,7 +16,7 @@ Challis RJ, Kumar S, Stevens L & Blaxter M (2017) GenomeHubs: Simple containeris
 * ![cgp](cgp.png) [ensembl.caenorhabditis.org](http://ensembl.caenorhabditis.org) - an Ensembl for the Caenorhabditis Genomes Project which aims to sequence all species in the genus *Caenorhabditis*
 * ![tardibase](tardibase.png) [ensembl.tardigrades.org](http://ensembl.tardigrades.org) - an Ensembl to support collaboration on tardigrade genome sequencing
 * ![ngenomes](ngenomes.png) [ensembl.ngenomes.org](http://ensembl.ngenomes.org) - a selection of recent genome assemblies from the Blaxter Lab
-* ![mealybugbase](mealybugbase.png) [ensembl.mealybugs.org](http://ensembl.mealybugs.org) - a model system for host-symbiont interaction
+* ![mealybugbase](mealybugbase.png) [ensembl.mealybug.org](http://ensembl.mealybug.org) - a model system for host-symbiont interaction
 
 ## Coming soon...
 * MolluscDB - combining transcriptome and genome sequence data for over 300 species of Mollusc
