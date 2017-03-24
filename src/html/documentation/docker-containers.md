@@ -6,12 +6,13 @@ date: 2017-03-03
 ---
 
 
-GenomeHubs containers typically run as UID 1000 so are compatible with being run as the 
-default user on a fresh Linux install. The exception is the mySQL container that writes to 
-`/var/lib/mysql` as UID 27, as such mounting a mySQL data directory brings convenience in file 
-management but may cause permissions issues so is entirely optional. There are many ways to deal 
-with [Docker](http://docker.com) users and permissions that are beyond the scope of this documentation. 
-Running Genomehubs with a different UID is possible but unsupported.
+GenomeHubs containers typically run as UID 1000 so are compatible with being run as the
+default user on a fresh Linux install. The exception is the mySQL container that writes to
+`/var/lib/mysql` as UID 27, as such mounting a mySQL data directory brings convenience in file
+management but may cause permissions issues so is entirely optional. To run most other containers
+as a different user, add `-u $UID:$GROUPS` to the docker run command so that any files they write
+in mounted directories will be owned by the correct user. To run EasyMirror as a different user,
+omit mounting `/ensembl/logs` and mount `/ensemb/conf` read only.
 
 ## mySQL
 
@@ -28,7 +29,7 @@ docker run -d \
            mysql/mysql-server:5.5
 ```
 
-See [hub.docker.com/r/mysql/mysql-server](https://hub.docker.com/r/mysql/mysql-server/) for full 
+See [hub.docker.com/r/mysql/mysql-server](https://hub.docker.com/r/mysql/mysql-server/) for full
 details and more secure configuration options.
 
 ## EasyMirror
@@ -60,7 +61,7 @@ docker run -d \
 [View on Github](https://github.com/genomehubs/easy-import-docker)
 
 Runs the [EasyImport](https://github.com/genomehubs/easy-import) scripts to import data into and export files from
-Ensembl databases. Used both for Importing new assemblies, gene models and functional annotations into 
+Ensembl databases. Used both for Importing new assemblies, gene models and functional annotations into
 an Ensembl and for generating files for downloads and BLAST services as part of a
 [GenomeHubs Ensembl mirror](http://genomehubs.org/documentation/mirror-setup-part-ii/).
 
@@ -89,7 +90,7 @@ home pages and `-i` runs the `index_database.pl` script to provide search.
 
 [View on Github](https://github.com/genomehubs/h5ai-docker)
 
-Sets up an [h5ai](https://larsjung.de/h5ai/) downloads server with support for various 
+Sets up an [h5ai](https://larsjung.de/h5ai/) downloads server with support for various
 customisations.
 
 ```
@@ -104,11 +105,11 @@ docker run -d \
 Directories to be indexed should be mounted as subdirectories of ``/var/www``
 
 Files in a directory mounted to /conf will be used as follows
-- ``lighttpd.conf`` overwrites ``/etc/lighttpd/lighttpd.conf`` 
+- ``lighttpd.conf`` overwrites ``/etc/lighttpd/lighttpd.conf``
 - ``options.json`` overwrites ``/var/www/_h5ai/private/conf/options.json``
 - ``index.html`` is copied to ``/var/www/`` and will be served in place of a directory listing for the server root
 - ``Masthead.html`` is added to ``/var/www/_h5ai/private/php/pages/index.php`` as a masthead on everypage
-- ``img/*`` files in this directory are copied to ``/var/www/img`` 
+- ``img/*`` files in this directory are copied to ``/var/www/img``
 - ``custom.css`` is copied to ``/var/www/_h5ai/public/ext/``
 
 
@@ -116,8 +117,8 @@ Files in a directory mounted to /conf will be used as follows
 
 [View on Github](https://github.com/genomehubs/sequenceserver-docker)
 
-Sets up an [SequenceServer](https://sequenceserver.com) BLAST server with support for various 
-customisations. Uses the latest `master` branch which comes with one or two bugs (e.g. 
+Sets up an [SequenceServer](https://sequenceserver.com) BLAST server with support for various
+customisations. Uses the latest `master` branch which comes with one or two bugs (e.g.
 it may be necessary to manually refresh the results page after running a search) but a
 great user interface and result visualisation.  
 
@@ -134,7 +135,7 @@ Files in a directory mounted to `/conf` will be used as follows:
 - ``sequenceserver.conf`` overwrites the standard SequenceServer configuration options
 - ``Masthead.html`` is added as a masthead on every page
 - ``custom.css`` can be applied to the Masthead or any other page element
-- ``links.rb`` specifies how to parse the sequence IDs to generate links back to the Ensembl 
+- ``links.rb`` specifies how to parse the sequence IDs to generate links back to the Ensembl
   site, and the base url for that site.
 
 
@@ -143,7 +144,7 @@ Files in a directory mounted to `/conf` will be used as follows:
 [View on Github](https://github.com/genomehubs/repeatmasker-docker)
 
 Repeatmasker docker container built from [hub.docker.com/r/robsyme/repeatmasker-onbuild](https://hub.docker.com/r/robsyme/repeatmasker-onbuild/)
-with modifications to make it easier to use as a GenomeHubs container by running as UID 1000, separating input and output 
+with modifications to make it easier to use as a GenomeHubs container by running as UID 1000, separating input and output
 directories and renaming output files.
 
 Clone the repository
@@ -188,7 +189,7 @@ docker run -d \
 [View on Github](https://github.com/genomehubs/cegma-docker)
 
 CEGMA docker container built from [hub.docker.com/r/robsyme/cegma-docker](https://hub.docker.com/r/robsyme/cegma-docker/)
-with modifications to make it easier to use as a GenomeHubs container by running as UID 1000, separating input and output 
+with modifications to make it easier to use as a GenomeHubs container by running as UID 1000, separating input and output
 directories and renaming output files.
 
 ```
@@ -207,7 +208,7 @@ Writes `scaffolds.fa.completeness_report.txt` and `scaffolds.fa.cegma.gff` to th
 [View on Github](https://github.com/genomehubs/busco-docker)
 
 BUSCO docker container built from [hub.docker.com/r/vera/busco](https://hub.docker.com/r/vera/busco/)
-with modifications to make it easier to use as a GenomeHubs container by running as UID 1000, separating input and output 
+with modifications to make it easier to use as a GenomeHubs container by running as UID 1000, separating input and output
 directories and renaming output files.
 
 Clone the repository
@@ -253,7 +254,7 @@ wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/c
 gunzip uniprot_sprot.fasta.gz
 ```
 
-Use the NCBI-Blast docker container to format the downloaded file as a protein BLASTDB. This will create a UniProt Swiss-Prot 
+Use the NCBI-Blast docker container to format the downloaded file as a protein BLASTDB. This will create a UniProt Swiss-Prot
 protein blast database in the current directory (change `pwd` to directories of your choice)
 
 ```
@@ -278,16 +279,16 @@ docker run --rm --name blast-test \
         -outfmt '6 std qlen slen stitle btop' -out /out/species_proteins.fa.blastp.uniprot_sprot.1e-10
 ```
 
-Takes `species_proteins.fa` in the directory mounted at `/query` and writes species_proteins.fa.blastp.uniprot_sprot.1e-10.gz 
-(automatically gzipped) to the directory mounted at `/out` (both are the current working directory in this case). Uses GNU 
-Parallel underneath to speed up the blast jobs by running `-num_threads 16` parallel threads. (O. Tange (2011): GNU Parallel 
+Takes `species_proteins.fa` in the directory mounted at `/query` and writes species_proteins.fa.blastp.uniprot_sprot.1e-10.gz
+(automatically gzipped) to the directory mounted at `/out` (both are the current working directory in this case). Uses GNU
+Parallel underneath to speed up the blast jobs by running `-num_threads 16` parallel threads. (O. Tange (2011): GNU Parallel
 - The Command-Line Power Tool ;login: The USENIX Magazine, February 2011:42-47.)
 
 ## Interproscan
 
 [View on Github](https://github.com/blaxterlab/interproscan-docker)
 
-Run Interproscan on a protein fasta file using a docker container (Note: the protein fasta sequences must not have "*"s else it 
+Run Interproscan on a protein fasta file using a docker container (Note: the protein fasta sequences must not have "*"s else it
 will fail):
 
 ```
@@ -299,9 +300,9 @@ docker run --rm --name ipr-test \
     interproscan.sh -i /in/species_proteins.fa -d /dir -appl PFAM,SignalP_EUK -goterms -dp -pa -f TSV
 ```
 
-Takes `species_proteins.fa` in the directory mounted at `/in` and writes output file `species_proteins.fa.tsv` to the 
-directory mounted at `/dir` (both are the current working directory in this case). Any interproscan arguments can be used. In 
-this example, `-appl` specifies which interproscan analyses to run, `-goterms` will output GO terms, `-dp` will disable 
+Takes `species_proteins.fa` in the directory mounted at `/in` and writes output file `species_proteins.fa.tsv` to the
+directory mounted at `/dir` (both are the current working directory in this case). Any interproscan arguments can be used. In
+this example, `-appl` specifies which interproscan analyses to run, `-goterms` will output GO terms, `-dp` will disable
 precalculated lookups, `-pa` looks up corresponding pathway annotations, `-f TSV` outputs results in TSV format.
 
 If you want to run this with many threads in parallel, first download a copy of `interproscan.properties`:

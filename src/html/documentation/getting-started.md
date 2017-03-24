@@ -17,8 +17,7 @@ While it simplifies many aspects of running a complex set of interconnected serv
 Docker does have its own complications, particularly regarding user namespaces. All GenomeHubs
 containers are designed to run as a user with UID 1000 (i.e. the UID of the default "ubuntu"
 user on a fresh install) so to avoid complexity all examples assume you will be running docker
-as this user. There are many other ways to handle users and permissions with Docker but these are
-beyond the scope of these instructions.
+as this user.
 
 ## Quick start
 
